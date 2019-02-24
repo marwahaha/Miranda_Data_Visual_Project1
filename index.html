@@ -1,0 +1,647 @@
+
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+
+  <style>
+
+    #chart-area svg1 {
+      margin:auto;
+      display:inherit;
+    }
+    div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 120px;
+    height: auto;
+    padding: 12px 2px 2px 2px;
+    font: 34px sans-serif;
+    background: lightsteelblue;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+    font-size:16px;
+}
+
+   
+    td{ text-align: right; }
+    th { text-align: right; }
+    h2 { text-align: left; }
+
+    #leg1 { background-color: #E74C3C; }
+    #leg2 { background-color: #E74C3C; }
+    #leg3 { background-color: #8da0cb; }
+    #leg4 { background-color: #e78ac3; }
+    #leg5 { background-color: #d0743c; }
+    #leg6 { background-color: #d0743c; }
+    #leg7 { background-color: #E74C3C; }
+    #leg8 { background-color: #5DADE2; }
+  
+
+
+    @media screen and (min-width: 768px) {
+      table { margin-top: 100px; }
+    }
+
+    @media screen and (min-width: 768px) {
+      table { margin-top: 100px; }
+    }
+
+    #page-main { margin-top: 10px; }
+
+    #controls { margin-bottom: 20px; }
+
+    #play-button {
+      margin-top: 30px;
+      margin-left: 40px;
+      width: 100px;
+    }
+
+    #slider-div {
+      width:300px;
+      float:right;
+    }
+    </style>
+
+     <!-- External stylesheets -->
+    <link rel="stylesheet" href="css/jquery-ui.theme.min.css">
+    <link rel="stylesheet" href="css/jquery-ui.structure.min.css">
+
+
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- button to see individual countries -->
+<div style="text-align: left; margin: 40px;">
+    <button class="btn btn-primary center" onclick="individualCountry()">Individual Countries</button>
+</div>
+<!-- the world data pies -->
+<div id="World" style="display: block;">      
+    <h2>Top 8 U.S. Citizen Death Overseas 2002-2018</h2>
+    <div class="container center" id="page-main">
+        <div id="controls" class="row">
+            <div class="col-md-12">
+            <button id="play-button" class="btn btn-primary">Play</button>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <label> Pie 1</label>
+            <h2>Year: <span id="year"></span></h2>
+            <div id="chart-area"></div>
+            <div id="slider-div">
+                <label>Year: <span id="year-label"></span></label>
+                <div id="date-slider"></div>
+            </div>
+        </div>
+        <button class="btn btn-primary" onclick="myFunction()">Compare Different Year</button>
+        <div id="Compare" style="display: none;" class="col-md-4" >
+            <label> Pie 2</label>
+            <h2>Year: <span id="year2"></span></h2>
+            <div id="chart-area2"></div>
+            <div id="slider-div">
+                <label>Year: <span id="year-label2"></span></label>
+                <div id="date-slider2"></div>
+            </div>
+        </div>
+        <div class="col-md-4">   
+          <table class="table">
+            <tbody>
+              <tr>
+                <th></th>
+                <th>Causes of Death</th>
+                <th># of Deaths Pie 1</th>
+                <th># of Deaths Pie 2</th>
+                </tr>
+                <td id="leg8" style="background-color: #5DADE2"></td>
+                <td style="text-align: left;">Vehicle Accident</td>
+                <td><span id="fig8"></span></td>
+                <td><span id="fig80"></span></td>
+              </tr>
+              </tr>
+                <td id="leg6" style="background-color: #797D7F"></td>
+                <td style="text-align: left;">Terrorist Action</td>
+                <td><span id="fig7"></span></td>
+                <td><span id="fig70"></span></td>
+              </tr>
+              <tr>
+                <td id="leg7" style="background-color: #D5F5E3"></td>
+                <td style="text-align: left;">Suicide</td>
+                <td><span id="fig6"></span></td>
+                <td><span id="fig60"></span></td>
+              </tr>
+              <tr>
+                <td id="leg5" style="background-color: #DC7633"></td>
+                <td style="text-align: left;">Other</td>
+                <td><span id="fig5"></span></td>
+                <td><span id="fig50"></span></td>
+              </tr>
+              <tr>
+                <td id="leg4" style="background-color: #28B463"></td>
+                <td style="text-align: left;">Homicide</td>
+                <td><span id="fig4"></span></td>
+                <td><span id="fig40"></span></td>
+              </tr>
+              <tr>
+                <td id="leg3" style="background-color: #B2A291"></td>
+                <td style="text-align: left;">Drug-related</td>
+                <td><span id="fig3"></span></td>
+                <td><span id="fig30"></span></td>
+              </tr>
+              <tr>
+                <td id="leg2" style="background-color: #9B59B6"></td>
+                <td style="text-align: left;">Drowning</td>
+                <td><span id="fig2" style="text-align: right;"></span></td>
+                <td><span id="fig20"></span></td>
+              </tr>
+              <tr>
+                <td id="leg1" style="background-color: #E74C3C"></td>
+                <td style="text-align: left;">Air Accident</td>
+                <td><span id="fig1"></span></td>
+                <td><span id="fig10"></span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+</div>
+</div>
+
+<!-- the individual country pie data -->
+<div class="container" id="Individual" style="display: none;"  >
+    <div class="container">
+      <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-4">
+              <div id="country"></div>
+            </div>
+            <div class="col-md-4">
+                <div class="row">
+                    <select id="listCountry" ></select>     
+                </div>
+                <div class="row" style="margin-top: 40px;">
+                    <div id="slider-div">
+                        <label>Year: <span id="year-label3"></span></label>
+                        <div id="date-slider3"></div>
+                      </div>             
+                </div>
+                <div class="row" style="margin-left: 65px">
+                    <label>Abbreviations</label>
+                    <li>air - Air Accident</li>
+                    <li>dro - Drowning</li>
+                    <li>dru - Drug-related</li>
+                    <li>dis - Disaster</li>
+                    <li>hom - Homicide</li>
+                    <li>oth - Other</li>
+                    <li>sui - Suicide</li>
+                    <li>ter - Terrorist Action</li>
+                    <li>veh - Vehicle Accident</li>
+                </div>          
+            </div>
+            <div class="col-md-2"></div>
+      </div>
+    </div>
+</div>
+
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js'></script>
+<script src="//code.jquery.com/jquery-1.10.2.js"></script> 
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenLite.min.js"></script>
+
+
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <script>
+        //Define all svg width and height
+        var width = 350,
+        height = 330,
+        radius = Math.min(width, height) / 2;
+
+        var width2 = 400,
+        height2 = 400;
+
+
+        //enter data
+        d3.csv("data/export.csv", function(error, data) {
+            if (error) throw error;
+           
+            //parse through data to fit format needed
+            data = data.filter(d=>d.CauseOfDeath!==undefined);
+            data = data.filter(d=>d.City!==undefined);
+            data = data.filter(d=>d.City!== "");
+            data = data.filter(d=>d.CauseOfDeath.toLowerCase().indexOf("maritime") < 0  
+               && d.CauseOfDeath.toLowerCase().indexOf("under") < 0 
+               && d.CauseOfDeath.toLowerCase().indexOf("tra") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("nat") < 0  
+               && d.CauseOfDeath.toLowerCase().indexOf("hostage") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("armed") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("execution") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("unknown") < 0);
+
+             data = data
+            .sort(function(d,i){return d3.ascending(d.CauseOfDeath, i.CauseOfDeath);})
+
+
+                 var countryByYear = d3.nest()
+                             .key(function(d) {return d.City.toUpperCase().split("-").splice(-1); })
+                             .key(function(d) { return d.Date.slice(6,10); }).sortKeys(d3.ascending)
+                             .key(function(d) { return d.CauseOfDeath.toLowerCase().slice(0,3); })
+                             .rollup(function(v) { return v.length; })
+                             .entries(data);
+
+            data = data.filter(d=>d.CauseOfDeath!==undefined);
+            data = data.filter(d=>d.City!==undefined);
+            data = data.filter(d=>d.City!== "");
+            data = data.filter(d=>d.CauseOfDeath.toLowerCase().indexOf("maritime") < 0  
+               && d.CauseOfDeath.toLowerCase().indexOf("under") < 0 
+               && d.CauseOfDeath.toLowerCase().indexOf("tra") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("disaster") < 0  
+               && d.CauseOfDeath.toLowerCase().indexOf("hostage") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("armed") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("execution") < 0
+               && d.CauseOfDeath.toLowerCase().indexOf("unknown") < 0);
+
+
+
+
+            data = data
+            .sort(function(d,i){return d3.ascending(d.CauseOfDeath, i.CauseOfDeath);})
+
+               var countries = d3.nest()
+                             .key(function(d) { return d.Date.slice(6,10); }).sortKeys(d3.ascending)
+                             .key(function(d) {return d.City.toUpperCase().split("-").splice(-1); })
+                             .key(function(d) { return d.CauseOfDeath.toLowerCase().slice(0,3); })
+                             .rollup(function(v) { return v.length; })
+                             .entries(data);
+
+
+                var countryNameArray = [];
+
+                countryByYear.forEach( function(d) {
+                    countryNameArray.push(d.key)
+                })
+
+            //the selection will be loaded up with country names
+            d3.select("#listCountry").selectAll("option").data(countryNameArray).enter().append("option").text(function(d){
+            return d;});
+
+            $("#listCountry").on("change", update3)
+
+
+            data = d3.nest()
+                .key(function(d) { return d.Date.slice(6,10); }).sortKeys(d3.ascending)
+                .key(function(d) { return d.CauseOfDeath.toLowerCase().slice(0,3); })
+                .rollup(function(v) { return v.length; })
+                .entries(data);
+
+            
+            //starting point for pies
+            var countriesPie = countryByYear[0].values[0];          
+            var year2003 = data[0];
+            var circle2 = data[0];
+          //  console.log(year2003)
+            const radiusScale = d3.scaleSqrt() // updates the radius scale every time the visualization is updated
+            .domain([0, d3.max(year2003.values.map(d=>d.value))])
+            .range([0, Math.min(width, height) / 4]);
+            var colorArr = ["#E74C3C", "#9B59B6", "#B2A291","#28B463", "#DC7633", "#D5F5E3", "#797D7F", "#5DADE2"]; //define colors here
+            
+             const radiusScale2 = d3.scaleSqrt() // updates the radius scale every time the visualization is updated
+            .domain([0, d3.max(circle2.values.map(d=>d.value))])
+            .range([0, Math.min(width, height) / 4]);
+           
+
+            const radiusScale3 = d3.scaleSqrt() // updates the radius scale every time the visualization is updated
+            .domain([0, d3.max(countriesPie.values.map(d=>d.value))])
+            .range([20, Math.min(width2, height2)/10]);
+            
+
+            const pie = d3.pie()
+            .value(d=>d.value)//create arcs to the value number
+            .sort(null);
+
+            const arc = d3.arc()
+            .innerRadius(0);
+
+            //Create svg for each pie
+            var svg1 = d3.select("#chart-area").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");//will shift the visualizatoin to the center
+
+             var svg2 = d3.select("#chart-area2").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+            var svg3 = d3.select("#country").append("svg")
+            .attr("width", width2)
+            .attr("height", height2)
+            .append("g")
+            .attr("transform", "translate(" + width2 / 2 + "," + height2 / 2 + ")");
+
+
+            var div = d3.select("body").append("div")
+            .attr("class", "tooltip")
+            .style("opacity", 0);
+
+            update(year2003);
+            update2(circle2);
+            update3(countriesPie);
+
+
+
+        // In the i variable a value between 0 and 1 is stored. this._current is an object that contains the start and end angle of the pie slice that we’re looking at, and a represents the new datapoint that we’re updating to.
+        function arcTween(a) {
+          const i = d3.interpolate(this._current, a);
+          this._current = i(1);
+          return t => arc(i(t));
+        }
+
+
+        function update(data) {
+            updateHTML(data);
+
+              arc.outerRadius(d => radiusScale(d.data.value));//will scale the radius for each pie connected to data
+
+              // JOIN
+              // this creates a new array of data with our SVGs on the screen.We pass data into the pie() layout function(computing some start and end angles to create the arcs).This path variable now contains a special virtual selection of all of the arcs on the screen.
+              const path = svg1.selectAll("path")
+              .data(pie(data.values));
+
+              // UPDATE
+               path.transition().duration(900).attrTween("d", arcTween);
+
+
+              // ENTER
+              path.enter().append("path")
+              .attr("fill", (d, i) => colorArr[i]) //use here
+              .attr("d", arc)
+              .attr("stroke", "white")
+              .attr("stroke-width", "2px")
+              .each(function(d) { this._current = d; });
+
+          }
+
+           function update2(data) {
+            updateHTML2(data);
+              arc.outerRadius(d => radiusScale2(d.data.value));//will scale the radius for each pie connected to data
+
+              const path2 = svg2.selectAll("path")
+              .data(pie(data.values));
+
+              // UPDATE
+               path2.transition().duration(900).attrTween("d", arcTween);
+
+
+              // ENTER
+              path2.enter().append("path")
+              .attr("fill", (d, i) => colorArr[i])
+              .attr("d", arc)
+              .attr("stroke", "white")
+              .attr("stroke-width", "2px")
+              .each(function(d) { this._current = d; });
+
+          }
+          //has a long length
+          var selectcountry = "BELIZE";
+          let test = 0;
+
+          function update3(countryByYear) {
+            console.log(countryByYear);
+           // console.log(countries);
+
+           //console.log(countryByYear.values);
+
+            updateHTML3(countryByYear);
+              arc.outerRadius(d => radiusScale3(d.data.value));//will scale the radius for each pie connected to data
+
+              const path3 = svg3.selectAll("path")
+              .data(pie(countryByYear.values));
+
+              
+              // UPDATE
+               path3.transition().duration(900).attrTween("d", arcTween);
+
+
+              // ENTER
+              path3.enter().append("path")
+              .attr("fill", (d, i) => colorArr[i])
+              .attr("d", arc)
+              .attr("stroke", "white")
+              .attr("stroke-width", "2px")
+              .each(function(d) { this._current = d; })
+               .on("mouseover", function(d) { console.log(d);
+                        div.transition()
+                            .duration(200)
+                            .style("opacity", 1);
+                        div.html( 
+                            "<p> <strong> CAUSE:  "+d.data.key +" </strong>" +"<br>"+ "<strong> DEATHS:"+d.value +"</strong> </p>")
+                            .style("left", (d3.event.pageX) + "px")
+                            .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                    .on("mouseout", function(d) {
+                        div.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+
+                  // removes slices/labels/lines that are not in the current dataset
+                path3.exit()
+                    .transition()
+                    .duration(200)
+                    .attrTween("d", arcTween)
+                    .remove();
+
+
+            //enable interaction for change event
+            d3.select("#listCountry").on("change", function() {
+                // event handler
+                selectcountry = this.value;
+                 test = countryNameArray.indexOf(selectcountry);
+
+                if(test === -1) {
+                     test = countryNameArray.indexOf(" " + selectcountry);
+                }
+
+                if(test === -1) {
+                     test = countryNameArray.indexOf("   " + selectcountry);
+                }
+
+            })
+          }
+
+          //Makes the dash circles on Pie 1 and Pie 2
+
+          for(let i = 1; i<= 4; i++){
+            svg1.append("circle")
+                  .attr("fill", "none")
+                  .attr("cx", 0)
+                  .attr("cy", 0)
+                  .attr("r", i*35)
+                  .attr("stroke", "black")
+                  .attr("stroke-dasharray", "4,4");
+          }
+
+          for(let i = 1; i<= 4; i++){
+            svg2.append("circle")
+                  .attr("fill", "none")
+                  .attr("cx", 0)
+                  .attr("cy", 0)
+                  .attr("r", i*35)
+                  .attr("stroke", "black")
+                  .attr("stroke-dasharray", "4,4");
+          }
+          
+            //this allows the "play" function to go through years
+            let time = 0;
+            let interval;
+
+            function step() {
+            update(data[time]);
+
+            time = (time == 16) ? 0 : time + 1;
+            }
+
+              $("#play-button").on("click", function() {
+                const button = $(this);
+                if (button.text() === "Play"){
+                  button.text("Pause");
+                  interval = setInterval(step, 2000);
+                } else {
+                  button.text("Play");
+                  clearInterval(interval);
+                }
+              });
+
+            $("#date-slider").slider({
+                max: 16,
+                min: 0,
+                step: 1,
+                slide: (event, ui) => {
+                  time = ui.value;
+                  update(data[time]);
+                }
+              });
+
+
+      
+               // Update slider position
+            $("#date-slider").slider("value", time);
+
+            $("#date-slider2").slider({
+            max: 16,
+            min: 0,
+            step: 1,
+            slide: (event, ui) => {
+              time = ui.value;
+              update2(data[time]);
+            }
+          });
+
+      
+               // Update slider position
+            $("#date-slider2").slider("value", time);
+
+
+            // Take that index and use it for your number for country year
+
+
+              $("#date-slider3").slider({
+            max: countryByYear[test+5].values.length-1,
+            min: 0,
+            step: 1,
+            slide: (event, ui) => {
+              time = ui.value;
+              console.log(countryByYear[test].values[time]);
+              update3(countryByYear[test].values[time]);
+            }
+          });
+
+      
+               // Update slider position
+            $("#date-slider3").slider("value", time);
+
+
+
+      });
+
+        //shows Pie 2 to compare years
+        function myFunction() {
+            var x = document.getElementById("Compare");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+        }
+        //Switchs view from the world pies and the individual pies
+         function individualCountry() {
+          var x = document.getElementById("World");
+           var y = document.getElementById("Individual");
+
+          if (x.style.display === "none") {
+
+            x.style.display = "block";
+            y.style.display = "none";
+            console.log("hey");
+          } else {
+            console.log("you");
+            x.style.display = "none";
+            y.style.display = "block";
+          }
+        }
+       //update row 3 on table and updates years to pies
+        function updateHTML(data) {
+                  // Update title
+                  $("#year").text(data.key);
+
+
+                  // Update slider label
+                  $("#year-label").text(data.key);
+
+                  // Update table values
+                   $("#fig1").html(data.values[0].value.toLocaleString());
+                   $("#fig2").html(data.values[1].value.toLocaleString());
+                   $("#fig3").html(data.values[2].value.toLocaleString());
+                   $("#fig4").html(data.values[3].value.toLocaleString());
+                   $("#fig5").html(data.values[4].value.toLocaleString());
+                   $("#fig6").html(data.values[5].value.toLocaleString());
+                   $("#fig7").html(data.values[6].value.toLocaleString());
+                   $("#fig8").html(data.values[7].value.toLocaleString());
+
+                   $("#fig88").html(data.values[7].value.toLocaleString());
+                
+        }
+
+        //update row 3 on table and updates years to pies
+        function updateHTML2(data) {
+                  // Update title
+                  $("#year2").text(data.key);
+
+
+                  // Update slider label
+                  $("#year-label2").text(data.key);
+
+                  // // Update table values
+                    $("#fig10").html(data.values[0].value.toLocaleString());
+                   $("#fig20").html(data.values[1].value.toLocaleString());
+                   $("#fig30").html(data.values[2].value.toLocaleString());
+                   $("#fig40").html(data.values[3].value.toLocaleString());
+                   $("#fig50").html(data.values[4].value.toLocaleString());
+                   $("#fig60").html(data.values[5].value.toLocaleString());
+                   $("#fig70").html(data.values[6].value.toLocaleString());
+                   $("#fig80").html(data.values[7].value.toLocaleString());
+        }
+
+        function updateHTML3(data) {
+                          // Update slider label
+                          $("#year-label3").text(data.key);
+                }
+</script>
+
+</body>

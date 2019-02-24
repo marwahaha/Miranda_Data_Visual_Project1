@@ -302,7 +302,6 @@
             var countriesPie = countryByYear[0].values[0];          
             var year2003 = data[0];
             var circle2 = data[0];
-          //  console.log(year2003)
             const radiusScale = d3.scaleSqrt() // updates the radius scale every time the visualization is updated
             .domain([0, d3.max(year2003.values.map(d=>d.value))])
             .range([0, Math.min(width, height) / 4]);
@@ -412,11 +411,6 @@
           let test = 0;
 
           function update3(countryByYear) {
-            console.log(countryByYear);
-           // console.log(countries);
-
-           //console.log(countryByYear.values);
-
             updateHTML3(countryByYear);
               arc.outerRadius(d => radiusScale3(d.data.value));//will scale the radius for each pie connected to data
 
@@ -435,7 +429,7 @@
               .attr("stroke", "white")
               .attr("stroke-width", "2px")
               .each(function(d) { this._current = d; })
-               .on("mouseover", function(d) { console.log(d);
+               .on("mouseover", function(d) { 
                         div.transition()
                             .duration(200)
                             .style("opacity", 1);
@@ -557,7 +551,6 @@
             step: 1,
             slide: (event, ui) => {
               time = ui.value;
-              console.log(countryByYear[test].values[time]);
               update3(countryByYear[test].values[time]);
             }
           });
@@ -588,9 +581,8 @@
 
             x.style.display = "block";
             y.style.display = "none";
-            console.log("hey");
+  
           } else {
-            console.log("you");
             x.style.display = "none";
             y.style.display = "block";
           }
